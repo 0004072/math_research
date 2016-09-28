@@ -11,12 +11,21 @@ public class Operators {
     public static void main(String[] args) {
         //perform("1024", "1024", "*");
         //perform("11a22", "2937", "=");
-        perform("123401651621651651651616541564542616516516556416516516516516516216541651651651651651651651651655454", "3128678165118941561651616515165165162165165165165165165165165156515616516516516516516516516516516511", "*");
+        //perform("123401651621651651651616541564542616516516556416516516516516516216541651651651651651651651651655454", "3128678165118941561651616515165165162165165165165165165165165156515616516516516516516516516516516511", "*");
+        System.out.println(lt("594651465", "494644654646551864561564"));
+        /*gt("2345", "2456");//false
+        gt("2345", "3456");//false
+        System.out.println();
+        gt("2345", "2345");//true
+        gt("2345", "2344");//true
+        gt("2345", "2334");//true
+        gt("2345", "2234");//true
+        gt("2345", "1234");//true*/
     }
 
     /**
      * Generates the diminished radix complement of a decimal number.
-     * @param arr
+     * @param arr Array containing the integer to find the complement of
      */
     private static void ninesComp(int[] arr){
         for(int i=0;  i<arr.length-1; i++)
@@ -35,25 +44,48 @@ public class Operators {
         positionAdd(arr, one, arr, 0, 0);
     }
 
-    /*private static boolean gt(String num1, String num2) {
-        boolean flag = false;
+    /**
+     * Compares two given integers. Integers are taken as strings.
+     * @param num1 Number to compare
+     * @param num2 Number to be compared with
+     * @return int[] array containing the indices of the
+     *      - first occurrence of value at index in num1 is less than the value at index in num2.
+     *      - first occurrence of value at index in num1 is greater than the value at index in num2.
+     */
+    private static int[] compare(String num1, String num2) {
+        boolean flags[][];
         int len = num1.length() > num2.length() ? num1.length() : num2.length();
         int[] n1 = new int[len], n2 = new int[len];
+        flags = new boolean[len][2];
 
         for (int i = 0; i < len; i++) {
             if (i < num1.length())
-                n1[i] = num1.codePointAt(i) - 48;
+                n1[i] = num1.codePointAt(num1.length()-i-1) - 48;
 
             if (i < num2.length())
-                n2[i] = num2.codePointAt(i) - 48;
+                n2[i] = num2.codePointAt(num2.length()-i-1) - 48;
         }
 
-        for(int i=0; i<len; i++){
-            if()
+        for(int i = 0; i < len; i++){
+            flags[len - i - 1][0] = n1[i] >= n2[i];
+
+            flags[len - i - 1][1] = n1[i] <= n2[i];
+        }
+
+        int flag[] = {0,0};
+        for(flag[0]=0; flag[0]<flags.length; flag[0]++){
+            if(!flags[flag[0]][0])
+                break;
+        }
+
+        for(flag[1]=0; flag[1]<flags.length; flag[1]++){
+            if(!flags[flag[1]][1])
+                break;
         }
 
         return flag;
-    }*/
+    }
+
     /**
      * Performs the positional addition recursively until reaches the end of the array.
      * @param a First addend
@@ -130,6 +162,74 @@ public class Operators {
 
     }
 
+    //comparison methods
+
+    /**
+     * Compares two given numbers.
+     * @param n1 Number to compare
+     * @param n2 Number to compare with
+     * @return Return true if the first is greater than the second, false otherwise.
+     */
+    private static boolean gt(String n1, String n2){
+        int arr[] = compare(n1, n2);
+        return (arr[0]>arr[1]);
+    }
+
+    /**
+     * Compares two given numbers.
+     * @param n1 Number to compare
+     * @param n2 Number to compare with
+     * @return Return true if the first is greater than or equal to the second, false otherwise.
+     */
+    private static boolean ge(String n1, String n2){
+        int arr[] = compare(n1, n2);
+        return (arr[0] >= arr[1]);
+    }
+
+    /**
+     * Compares two given numbers.
+     * @param n1 Number to compare
+     * @param n2 Number to compare with
+     * @return Return true if the first is less than the second, false otherwise.
+     */
+    private static boolean lt(String n1, String n2){
+        int arr[] = compare(n1, n2);
+        return (arr[0]<arr[1]);
+    }
+
+    /**
+     * Compares two given numbers.
+     * @param n1 Number to compare
+     * @param n2 Number to compare with
+     * @return Return true if the first is less than or equal to the second, false otherwise.
+     */
+    private static boolean le(String n1, String n2){
+        int arr[] = compare(n1, n2);
+        return (arr[0] <= arr[1]);
+    }
+
+    /**
+     * Compares two given numbers.
+     * @param n1 Number to compare
+     * @param n2 Number to compare with
+     * @return Return true if the first is equal to the second, false otherwise.
+     */
+    private static boolean eq(String n1, String n2){
+        int arr[] = compare(n1, n2);
+        return (arr[0] == arr[1]);
+    }
+
+    /**
+     * Compares two given numbers.
+     * @param n1 Number to compare
+     * @param n2 Number to compare with
+     * @return Return true if the first is not equal to the second, false otherwise.
+     */
+    private static boolean ne(String n1, String n2){
+        int arr[] = compare(n1, n2);
+        return (arr[0] != arr[1]);
+    }
+
     /**
      * Performs the indicated operation over the given numbers. If the inputs are invalid or the operator is invaid,
      * an error will be thrown.
@@ -149,7 +249,7 @@ public class Operators {
         try{
             if(!op.matches("[+*/-]{1}"))
                 throw new Error(String.format("Invalid operation detected! %s", op));
-            int val = 0;
+            int val;
             for(int k=0; k<i; k++){
                 val = a.codePointAt(i-k-1)-48;
                 if(val < 0 || val > 9)
