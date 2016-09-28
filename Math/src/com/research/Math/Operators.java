@@ -158,8 +158,13 @@ public class Operators {
         }
     }
 
-    private static void divide(){
+    private static void divide(String n1, String n2){
+        // TODO: 9/28/16 implement transformation algorithm
+        int ans[] = new int[n1.length()];
 
+        while(true){
+
+        }
     }
 
     //comparison methods
